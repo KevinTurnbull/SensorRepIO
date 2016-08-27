@@ -5,7 +5,7 @@ app.get('/', function (req, res) {
   res.send('Hello World')
 })
  
-app.listen(3000)
+app.listen(3000);
 
 app.get('/sensor_feed/:model/:id/:str_pressure/:str_temperature?', function (req, res){
 	var bmp = BMP280Handler()
@@ -27,28 +27,25 @@ app.get('/sensor_feed/:model/:id/:str_pressure/:str_temperature?', function (req
 	res.send("No Data Integrity Errors");
 })
 
-var BMP280Handler = function()
-{
-	ctrl = this;
+var BMP280Handler = function(){
+	var ctrl = this;
 
+	validId = function(data){return data == 1;}
+	validModel = function(data){return data == 'bmp280';}
 	validPressure = function(data){return data.indexOf('kPa') > -1;}
 	validTemperature = function(data){return data.indexOf('oC') > -1;}
 
 	ctrl.validate = function(data){
 		var result = []
 
-		if (data.model != 'bmp280') {
-			result.push('Unknown Model')
-		}
-		if (data.id != '1') {
-			result.push('Unknown Id')
-		}
-		if (!validPressure(data.str_pressure)) {
-			result.push('Invalid Pressure String')
-		}
-		if (!validTemperature(data.str_temperature)) {
-			result.push('Invalid Temperature String')
-		}
+		if (!validId(data.id)) 							
+			{result.push('Unknown Id')}
+		if (!validModel(data.model)) 					
+			{result.push('Unknown Model')}
+		if (!validPressure(data.str_pressure)) 			
+			{result.push('Invalid Pressure String')}
+		if (!validTemperature(data.str_temperature)) 	
+			{result.push('Invalid Temperature String')}
 
 		return result
 	}
