@@ -7,7 +7,7 @@ app.get('/', function (req, res) {
  
 app.listen(3000);
 
-app.get('/sensor_feed/:model/:id/:str_pressure/:str_temperature?', function (req, res){
+app.get('/sensor_feed/:model?/:id?/:str_pressure?/:str_temperature?', function (req, res){
 	var bmp = BMP280Handler()
 
 	var data_package = {
@@ -30,8 +30,8 @@ app.get('/sensor_feed/:model/:id/:str_pressure/:str_temperature?', function (req
 var BMP280Handler = function(){
 	var ctrl = this;
 
-	validId = function(data){return data == 1;}
-	validModel = function(data){return data == 'bmp280';}
+	validId = function(data){return data == 1||data==undefined;}
+	validModel = function(data){return data == 'bmp280'||data==undefined;}
 	validPressure = function(data){return data.indexOf('kPa') > -1;}
 	validTemperature = function(data){return data.indexOf('oC') > -1;}
 
