@@ -41,6 +41,7 @@ The settings path will be used to set state parameters for things such as:
 - Pin Assignments
 - Enabling / Disabling Automatic Actuators
 - Soft-Reset / Memory Wipe
+- Test Suite
 
 ### Actuator Path
-The Actuator path is set up to perform actions in the real world. This should be as isolated as possible from the sensor path. The Articulators should be code optimized used to perform a discrete off-circuit action such as moving a . The microcontrollers are to primarilly wait until they get a command from the server before changing anything. There are situations where it will be useful to have the microcontroller perform certain actions without waiting for a response from the server. These on-circuit logic units must provide an interface so they can be disabled/enabled using either IO Pins (preferably) or the settings path.
+The Actuator path is set up to perform actions in the real world. This should be as isolated as possible from the sensor path. The Articulators should be code optimized used to perform a discrete off-circuit action such as moving a . The microcontrollers are to primarilly wait until they get a command from the server before changing anything. There are situations where it will be useful to have the microcontroller perform certain actions without waiting for a response from the server. These on-circuit logic units must provide an interface so they can be disabled/enabled using IO Pins or the settings path. The settings path is preferable.
