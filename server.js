@@ -1,7 +1,13 @@
 console.log("Coming online...");
 
-var express = require('express')
-var app = express()
+var express = require('express');
+var app = express();
+
+var firebase = require("firebase");
+firebase.initializeApp({
+	databaseURL: "https://sensactio.firebaseio.com",
+	serviceAccount: "firebase_cert.json"
+});
  
 app.get('/', function (req, res) {
   res.send('Hello World')
@@ -9,6 +15,16 @@ app.get('/', function (req, res) {
 })
  
 app.listen(3000);
+
+app.get('/flush_db', function(req,res){
+	var db = firebase.database();
+	var sense = db.ref("analysed_feed");
+		sense.remove();
+	sense = db.ref("sensor_feed");
+	sense.remove();
+
+	res.send("Database Flushed");
+});
 
 app.get('/analysed_feed/:model?/:diff1?/:diff2?/:diff3?/:diff4?', function(req,res){
 	var lamFlowCtrl = LamFlowHandler();
@@ -21,11 +37,18 @@ app.get('/analysed_feed/:model?/:diff1?/:diff2?/:diff3?/:diff4?', function(req,r
 		diff4: Number(req.params['diff4']),
 	}
 
+	data_package.timestamp = Date.now();
+
 	var error_array = lamFlowCtrl.validate(data_package);
 
 	// Exit early if we have any problems.
 	if (error_array.length > 0)
 		{console.error(JSON.stringify(error_array));res.send(JSON.stringify(error_array));return;}
+
+	var db = firebase.database();
+	var sensorRepository = db.ref("analysed_feed");
+
+	sensorRepository.push().set(data_package);
 	
 	console.log("Data Package Read from Get without Error");
 	res.send("No Data Integrity Errors");
@@ -74,7 +97,9 @@ app.get('/sensor_feed/:model?/:id?/:str_pressure?/:str_temperature?', function (
 		model: req.params['model'],
 		str_pressure: req.params['str_pressure'],
 		str_temperature: req.params['str_temperature']
-	}
+	};
+
+	data_package.timestamp = Date.now();
 
 	var error_array = bmpCtrl.validate(data_package)
 
@@ -82,14 +107,21 @@ app.get('/sensor_feed/:model?/:id?/:str_pressure?/:str_temperature?', function (
 	if (error_array.length > 0)
 		{console.error(JSON.stringify(error_array));res.send(JSON.stringify(error_array));return;}
 	
+	var db = firebase.database();
+	var sensorRepository = db.ref("sensor_feed");
+
+	sensorRepository.push().set(data_package);
+
 	console.log("Data Package Read from Get without Error");
+	console.log(JSON.stringify(data_package));
+
 	res.send("No Data Integrity Errors");
 })
 
 var BMP280Handler = function(){
 	var ctrl = this;
 
-	validId = function(data){return data == 1||data==undefined;}
+	validId = function(data){return data == 1||data == 2||data == 3||data==undefined;}
 	validModel = function(data){return data == 'bmp280'||data==undefined;}
 	validPressure = function(data){return data.indexOf('kPa') > -1;}
 	validTemperature = function(data){return data.indexOf('oC') > -1;}
