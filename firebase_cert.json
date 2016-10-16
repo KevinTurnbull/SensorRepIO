@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "sensactio",
+  "private_key_id": "a3e7ebe13404ee58022e587fcc6c38a9939fa37e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC9mY1AJl9nY0uW\nOSHrycIYphsV37NECJcFTcJ6E97HrVtosKbJheyXIFUCvehaDddTzC6krnnea1ob\navRjL/qO7CLycxjKx9IbsXcE07gT4O2zi1iopkx9829D3DcM/fWzrFBYqaCj2TA8\nS12hCbxP+qkQBIkzpL6ADgjGhFT5aMNiZuTcjGJaex0l5o3D/4qJDsvJJw7q9mj1\ndDXTwIUUqmnHKagqSYk48iepMmNqplgf7KCmNgJ+CGSYYnU9x5FbXQuRFphn8CRR\nHr+4Mv9oZKVNjLiK3L36U8O7ut3qo1R3oYmP8Jw6+IF61qcJlC2kvZPtNXFFp5W/\nvcHnZOIDAgMBAAECggEBAKPcUXdfspRn/KuYNPjTJiynYkFFVGk4A01SJwHaqm9o\nI9gW1A7W7+KszsvP1T//Nln13Vn2cN0JapbHmO8gSCu9aXaggoy+pZfJiFNjp3OG\nsei6RaV8FB/GhCLh77IKyo6+HbKC55Kz4jw55nGHOHjm6bYuNWWsu/dwKaVoOQhT\nRCUFxVMfbvL8IZlmEQf9wVlZ8wKiSsK4i6q+S/jKiD0eEmfb0XJ+Pq8zSc2XUJd3\nlhgPRJThJ9a+8bwV+XaIjMtAaIBhGMSxzfkMchswE2XphUT4aZdR1q7kKsNpUuqr\nNKbMXPndQ9DknjHTCNMDXUbWD137xa+o5oZjyNn4dgECgYEA8U+FWY4WApV6/WuF\n/CZvD+git+hE4sDTvehHfKFyuMloe9945CUFgXIDqjCnRQSvIv4ZXKgU760yz5fs\nvTgnFRXh+lLYuDZ+FvZpeYnpdTXE57zsSbEkNbqaT5HzNPdzDkOTAOtbtCxNTINH\n9ht/y0EN0Lm24h8zvpxKxCBGxVcCgYEAySQxMKdj2gutAv5R6ewtgguJq+cmqvwg\nlAo8rMxhdqMFZxSbY+tzP2ZhXDOMbbwhPAD4KYGTDxeHcSfD3iYD+k07Me00N2Fq\ncmdQ/kOJ1eLM9cL4KMbwcRq4wmASMIZu5z4tLckOHoUVu6nPzNEZFWYO1Jxyib9D\nbsoFAGQu0TUCgYEAsWLzc9Gu/FdGAeR4qdLW8aqDWw2zFb0J6iBF7KgB3TSxSd4M\n0Ckm0vEtIH6Dd4jp9Z80pZgpS8bWAyR7Mt2EXUuowosEJOZp6hdZka5/n1nXVULb\nr5A4PgbeSH/ReK4uNd4WwiZBU0D90bDvxUqRtqgrr7PVbIPjVcsuat4PKCECgYBE\nInZnPMyeOAZLVUr6Kn7f5nikOpDmqrF+dFlJT5JUVbSmzlw05LUNbOjeCrgvE+NO\nKCXoKXRfUGEY+5dl0QrX5wF+UBO4Ds+4ITdWahpu0X0MYxcc+QbJyXt8nH6M4Xz/\n6Bf1wn196ScLguJZRxtwHDo52yURdDCrftNi5ozVYQKBgQDAxp717TpSE7X5EtmJ\nciibn2DK1waBqnecPxKBfVOp+zWSe9ue7blvB4ANyR0ertgdh0/y4RzV7pk3x05a\nG8wz0vmipsqOjm2Ibt/V5rEudydV5rc47ickTGGuEIdlkoJNKJ88nHP0zP2gNzKf\neQPXPydRszCgNyYhgFOeYQndIg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "kevinturnbull-ca@sensactio.iam.gserviceaccount.com",
+  "client_id": "107682314525293875108",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/kevinturnbull-ca%40sensactio.iam.gserviceaccount.com"
+}

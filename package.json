@@ -1,0 +1,11 @@
+{
+  "name": "sensact_io_server",
+  "version": "0.1.0",
+  "dependencies": {
+    "express": "4.14.0",
+    "firebase": "3.5.0"
+  },
+  "devDependencies" : {
+    
+  }
+}

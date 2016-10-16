@@ -40,7 +40,7 @@ var LamFlowHandler = function(){
 	}
 
 	validDiff = function(data){
-		return typeof data == "number"
+		return (typeof data == "number" || (data === undefined && mode.ALLOW_UNDEFINED))
 			&& (data >= 0 || mode.ALLOW_NEGATIVE_DIFFERENCE)
 			&& (data % 1 == 0 || mode.ALLOW_FRACTIONS)
 	}
