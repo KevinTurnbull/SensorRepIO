@@ -88,8 +88,54 @@ var LamFlowHandler = function(){
 	return ctrl;
 };
 
+var DS18B20Controller = function(req, res){
+	console.log("Received: ",req.params['str_temperature']);
+
+	var curr_temp = parseInt(req.params['str_temperature']);
+
+	var setPoint = 50;
+	var isUnderSetpoint = (curr_temp<setPoint);
+
+	console.log(curr_temp+ '<'+ setPoint+ '?'+(isUnderSetpoint));
+	if (isUnderSetpoint)
+		{res.send("H1");console.log("Command: Turn ON the Main Power");}
+	else 
+		{res.send("H0");console.log("Command: Turn OFF the Main Power");}
+	// */
+
+	// Load up out database connection
+	var db = firebase.database();
+	var sensorRepository = db.ref("sous_vide");
+
+	var wasLastEnabled = undefined;
+	//sensorRepository.remove();return;
+	sensorRepository.orderByChild("timestamp").limitToLast(1).once("value")
+		.then(function(mostRecent){
+			mostRecent.forEach(function(childSnapshot) {
+				var childData = childSnapshot.val();
+				wasLastEnabled = childData.mode;
+			});
+		})
+		.then(function(){
+			if (wasLastEnabled != isUnderSetpoint)
+			{	
+				var data_package = {
+					timestamp: Date.now(),
+					mode: curr_temp<setPoint,
+					cur_temp: curr_temp,
+					set_point: setPoint
+				}
+
+				sensorRepository.push(data_package);
+			}
+		})
+
+}
+app.get('/sous_vide/ds18b20/:str_temperature?', DS18B20Controller);
+
+
 // BMP280 Reader
-app.get('/sensor_feed/:model?/:id?/:str_pressure?/:str_temperature?', function (req, res){
+var BMP280Controller = function (req, res){
 	var bmpCtrl = BMP280Handler();
 
 	var data_package = {
@@ -116,7 +162,8 @@ app.get('/sensor_feed/:model?/:id?/:str_pressure?/:str_temperature?', function (
 	console.log(JSON.stringify(data_package));
 
 	res.send("No Data Integrity Errors");
-})
+};
+app.get('/sensor_feed/:model?/:id?/:str_pressure?/:str_temperature?', BMP280Controller);
 
 var BMP280Handler = function(){
 	var ctrl = this;
