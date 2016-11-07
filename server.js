@@ -8,6 +8,8 @@ firebase.initializeApp({
 	databaseURL: "https://sensactio.firebaseio.com",
 	serviceAccount: "firebase_cert.json"
 });
+
+var db = firebase.database();
  
 app.get('/', function (req, res) {
   res.send('Hello World')
@@ -17,7 +19,6 @@ app.get('/', function (req, res) {
 app.listen(3000);
 
 app.get('/flush_db', function(req,res){
-	var db = firebase.database();
 	var sense = db.ref("analysed_feed");
 		sense.remove();
 	sense = db.ref("sensor_feed");
@@ -45,7 +46,6 @@ app.get('/analysed_feed/:model?/:diff1?/:diff2?/:diff3?/:diff4?', function(req,r
 	if (error_array.length > 0)
 		{console.error(JSON.stringify(error_array));res.send(JSON.stringify(error_array));return;}
 
-	var db = firebase.database();
 	var sensorRepository = db.ref("analysed_feed");
 
 	sensorRepository.push().set(data_package);
@@ -88,37 +88,52 @@ var LamFlowHandler = function(){
 	return ctrl;
 };
 
-var DS18B20Controller = function(req, res){
+// Create a variable and bind it to the settings/sous_vide node on firebase
+var sousVideSettings = {setPoint: 50};	// Default setPoint of 50
+db.ref("settings/sous_vide").on("value", function(snapshot){sousVideSettings = snapshot.val();});
+
+var DS18B20_SousVide_Controller = function(req, res){
 	console.log("Received: ",req.params['str_temperature']);
 
+	// What are the current temperature and desired set point?
 	var curr_temp = parseInt(req.params['str_temperature']);
+	var setPoint = sousVideSettings.setPoint || 50;
 
-	var setPoint = 50;
+	// Pre-process the booleans we'll need (for readability)
 	var isUnderSetpoint = (curr_temp<setPoint);
+	var isHighDifference = isUnderSetpoint && (setPoint - curr_temp) > 10;
 
 	console.log(curr_temp+ '<'+ setPoint+ '?'+(isUnderSetpoint));
-	if (isUnderSetpoint)
+	if (!isUnderSetpoint)
+		{res.send("H0");console.log("Command: Turn OFF the Main Power");}
+	else if (isHighDifference)
 		{res.send("H1");console.log("Command: Turn ON the Main Power");}
 	else 
-		{res.send("H0");console.log("Command: Turn OFF the Main Power");}
-	// */
+		{res.send("T55");console.log("Command: Turn Power ON Half-time");}
 
-	// Load up out database connection
-	var db = firebase.database();
+	// Load up our database connection
 	var sensorRepository = db.ref("sous_vide");
 
-	var wasLastEnabled = undefined;
+	// This line clears the "sous_vide" area and returns before saving any new one.
 	//sensorRepository.remove();return;
+
+	// Create a controller-scope variable for use by the following pair of async tasks.
+	var wasLastEnabled = undefined;
+	// Get the most recent sensor value
 	sensorRepository.orderByChild("timestamp").limitToLast(1).once("value")
 		.then(function(mostRecent){
+			// Iterate through the 1 item array
 			mostRecent.forEach(function(childSnapshot) {
 				var childData = childSnapshot.val();
+				// Set the controller-scope variable for whether the previous sensor value was to disable or enable
 				wasLastEnabled = childData.mode;
 			});
 		})
 		.then(function(){
+			// If the current decision is different than the previously stored decision (or previously stored is still undefined)
 			if (wasLastEnabled != isUnderSetpoint)
 			{	
+				// Create a data_package and save it to firebase
 				var data_package = {
 					timestamp: Date.now(),
 					mode: curr_temp<setPoint,
@@ -131,7 +146,7 @@ var DS18B20Controller = function(req, res){
 		})
 
 }
-app.get('/sous_vide/ds18b20/:str_temperature?', DS18B20Controller);
+app.get('/sous_vide/ds18b20/:str_temperature?', DS18B20_SousVide_Controller);
 
 
 // BMP280 Reader
@@ -153,7 +168,6 @@ var BMP280Controller = function (req, res){
 	if (error_array.length > 0)
 		{console.error(JSON.stringify(error_array));res.send(JSON.stringify(error_array));return;}
 	
-	var db = firebase.database();
 	var sensorRepository = db.ref("sensor_feed");
 
 	sensorRepository.push().set(data_package);
